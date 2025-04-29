@@ -8,6 +8,7 @@ function App() {
   const [error, setError] = useState('');
   const [barColor, setBarColor] = useState('rgba(75, 192, 192, 0.2)');
   const [chartType, setChartType] = useState('bar'); // Default chart type
+  const [selectedField, setSelectedField] = useState(''); // New state for selected field
 
   const handleFileUpload = (event) => {
     setLoading(true);
@@ -21,7 +22,8 @@ function App() {
       if (file.name.endsWith('.json')) {
         try {
           const jsonData = JSON.parse(content);
-          setData(jsonData);
+          const processedData = Array.isArray(jsonData) ? jsonData : [jsonData];
+          setData(processedData);
         } catch (error) {
           setError('Invalid JSON file.');
         }
@@ -80,20 +82,36 @@ function App() {
             <option value="bubble">Bubble Chart</option>
             <option value="scatter">Scatter Chart</option>
           </select>
-          <ChartComponent data={data} barColor={barColor} chartType={chartType} />
+
+          {/* New dropdown to choose FIELD */}
+          <select
+            onChange={(e) => setSelectedField(e.target.value)}
+            value={selectedField}
+          >
+            <option value="">Select Field to Plot</option>
+            {Object.keys(data[0]).map((key) => (
+              <option key={key} value={key}>{key}</option>
+            ))}
+          </select>
+
+          <ChartComponent
+            data={data}
+            barColor={barColor}
+            chartType={chartType}
+            selectedField={selectedField}
+          />
         </div>
       ) : (
         <p className="no-file-message">Please Enter A File</p>
       )}
 
- 
       {data && <>
-      <label>Choose Bar Color</label>
-      <input
-        type="color"
-        value={barColor}
-        onChange={(e) => setBarColor(e.target.value)}
-      />
+        <label>Choose Bar Color</label>
+        <input
+          type="color"
+          value={barColor}
+          onChange={(e) => setBarColor(e.target.value)}
+        />
       </>
       }
     </div>
