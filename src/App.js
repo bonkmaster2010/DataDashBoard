@@ -7,8 +7,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [barColor, setBarColor] = useState('rgba(75, 192, 192, 0.2)');
-  const [chartType, setChartType] = useState('bar'); // Default chart type
-  const [selectedField, setSelectedField] = useState(''); // New state for selected field
+  const [chartType, setChartType] = useState('bar'); 
+  const [selectedField, setSelectedField] = useState('');
 
   const handleFileUpload = (event) => {
     setLoading(true);
