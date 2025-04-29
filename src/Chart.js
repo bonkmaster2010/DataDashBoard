@@ -3,7 +3,6 @@ import { Bar, Line, Pie, Doughnut, Radar, Bubble, Scatter } from 'react-chartjs-
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement, RadialLinearScale } from 'chart.js';
 import { saveAs } from 'file-saver';
 
-// Register necessary elements for each chart type
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -11,29 +10,26 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement, // For Pie/Doughnut
+  ArcElement, 
   PointElement,
   LineElement,
-  RadialLinearScale // For Radar
+  RadialLinearScale 
 );
 
 const ChartComponent = ({ data, barColor, chartType, selectedField }) => {
-  // Check if data exists and has at least one item
   if (!data || data.length === 0) {
     return <div>No data available for chart</div>;
   }
 
-  // Use selected field as the label and data key for chart
   const fieldToPlot = selectedField || Object.keys(data[0])[1] || Object.keys(data[0])[0];
 
   const chartData = {
-    labels: data.map(item => item.name),  // Label for each point (usually categories or items)
+    labels: data.map(item => item.name),  
     datasets: [
       {
         label: fieldToPlot,
         data: data.map(item => {
           const value = item[fieldToPlot];
-          // Convert string values to numbers if possible
           return typeof value === 'string' && !isNaN(value) ? parseFloat(value) : value;
         }),
         backgroundColor: barColor || 'rgba(75, 192, 192, 0.2)',
@@ -53,26 +49,26 @@ const ChartComponent = ({ data, barColor, chartType, selectedField }) => {
     scales: {
       r: {
         angleLines: {
-          display: true, // Show angle lines
+          display: true,
         },
-        beginAtZero: true, // Ensure the data starts from 0
+        beginAtZero: true, 
         pointLabels: {
-          display: true, // Display point labels
+          display: true, 
           font: {
-            size: 14, // Font size for labels
+            size: 14, 
           },
         },
       },
     },
   };
 
-  // Function to download chart data as JSON
+
   const downloadJson = () => {
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
     saveAs(blob, 'chartData.json');
   };
 
-  // Function to download chart data as CSV
+
   const downloadCsv = () => {
     const headers = Object.keys(data[0]);
     const rows = data.map(item => headers.map(key => item[key]));
@@ -86,7 +82,6 @@ const ChartComponent = ({ data, barColor, chartType, selectedField }) => {
     saveAs(blob, 'chartData.csv');
   };
 
-  // Function to download chart as an image
   const downloadImage = () => {
     const chartCanvas = document.querySelector('canvas');
     if (chartCanvas) {
@@ -106,7 +101,6 @@ const ChartComponent = ({ data, barColor, chartType, selectedField }) => {
     </div>
   );
 
-  // Handle different chart types with a switch statement
   switch (chartType) {
     case 'line':
       return (
